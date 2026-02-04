@@ -1,0 +1,205 @@
+0
+[2025-01-29] 92637364 100
+[2025-01-29] [accept] 21825474 ordered C-6028
+[2025-01-29] 40421221 100
+[2025-01-29] [accept] 85638857 read C-9357-01
+[2025-01-29] [accept] 92637364 ordered B-3558
+[2025-01-29] [accept] 92637364 read A-6352-01
+[2025-01-29] A-6352-03 moving trace: 0
+[2025-01-29] [accept] 74279123 read C-6028-01
+[2025-01-29] [accept] 85638857 restored C-9357-01
+[2025-01-29] [accept] 92637364 restored A-6352-01
+[2025-01-29] [accept] 74279123 restored C-6028-01
+0
+14
+[2025-02-02] move C-9357-01 from bro to bs
+[2025-02-02] move A-6352-01 from bro to bs
+[2025-02-02] move C-6028-01 from bro to bs
+[2025-02-02] move C-6028-01 from bs to ao for 21825474
+[2025-02-02] move B-3558-01 from bs to ao for 92637364
+[2025-02-02] move C-9357-01 from bs to hbs
+[2025-02-02] move A-6352-01 from bs to hbs
+[2025-02-02] move A-6352-02 from bs to hbs
+[2025-02-02] move A-6352-03 from bs to hbs
+[2025-02-02] move A-6352-04 from bs to hbs
+[2025-02-02] move A-6352-05 from bs to hbs
+[2025-02-02] move C-6028-02 from bs to hbs
+[2025-02-02] move C-6028-03 from bs to hbs
+[2025-02-02] move C-6028-04 from bs to hbs
+[2025-02-02] [accept] 92637364 picked B-3558-01
+0
+9
+[2025-02-03] move C-9357-01 from hbs to bs
+[2025-02-03] move A-6352-01 from hbs to bs
+[2025-02-03] move A-6352-02 from hbs to bs
+[2025-02-03] move A-6352-03 from hbs to bs
+[2025-02-03] move A-6352-04 from hbs to bs
+[2025-02-03] move A-6352-05 from hbs to bs
+[2025-02-03] move C-6028-02 from hbs to bs
+[2025-02-03] move C-6028-03 from hbs to bs
+[2025-02-03] move C-6028-04 from hbs to bs
+[2025-02-03] [accept] 21825474 picked C-6028-01
+0
+0
+[2025-02-21] 92637364 110
+[2025-02-21] 85638857 110
+[2025-02-21] 74279123 110
+0
+0
+[2025-04-12] 92637364 0
+[2025-04-12] 21825474 60
+[2025-04-12] 85638857 110
+[2025-04-12] 74279123 110
+0
+0
+[2025-05-02] [reject] 85638857 borrowed A-6352
+[2025-05-02] A-6352-05 moving trace: 2
+1 [2025-02-02] from bs to hbs
+2 [2025-02-03] from hbs to bs
+[2025-05-02] [reject] 92637364 read B-8269
+0
+0
+[2025-06-01] 92637364 0
+[2025-06-01] 21825474 0
+[2025-06-01] 85638857 110
+[2025-06-01] 74279123 110
+0
+0
+[2025-06-24] 18017331 100
+[2025-06-24] 93980894 100
+[2025-06-24] [accept] 18017331 ordered B-8269
+0
+1
+[2025-06-28] move B-8269-01 from bs to ao for 18017331
+[2025-06-28] [accept] 18017331 picked B-8269-01
+0
+0
+[2025-07-10] 18017331 100
+[2025-07-10] [reject] 93980894 borrowed A-6352
+[2025-07-10] [accept] 27980362 read B-8269-02
+[2025-07-10] [accept] 40421221 read B-8269-03
+[2025-07-10] [accept] 27980362 restored B-8269-02
+[2025-07-10] [accept] 40421221 restored B-8269-03
+0
+4
+[2025-08-25] move B-8269-02 from bro to bs
+[2025-08-25] move B-8269-03 from bro to bs
+[2025-08-25] move B-8269-02 from bs to hbs
+[2025-08-25] move B-8269-03 from bs to hbs
+[2025-08-25] [accept] 79639041 read A-6352-01
+[2025-08-25] 85638857 110
+[2025-08-25] 15385098 100
+[2025-08-25] [accept] 79639041 restored A-6352-01
+0
+8
+[2025-09-03] move A-6352-01 from bro to bs
+[2025-09-03] move B-8269-02 from hbs to bs
+[2025-09-03] move B-8269-03 from hbs to bs
+[2025-09-03] move A-6352-01 from bs to hbs
+[2025-09-03] move A-6352-02 from bs to hbs
+[2025-09-03] move A-6352-03 from bs to hbs
+[2025-09-03] move A-6352-04 from bs to hbs
+[2025-09-03] move A-6352-05 from bs to hbs
+[2025-09-03] [reject] 21825474 read B-3558
+[2025-09-03] [accept] 93980894 borrowed C-6028-02
+[2025-09-03] [reject] 18017331 borrowed C-6028
+[2025-09-03] C-9357-01 moving trace: 5
+1 [2025-01-29] from bs to rr
+2 [2025-01-29] from rr to bro
+3 [2025-02-02] from bro to bs
+4 [2025-02-02] from bs to hbs
+5 [2025-02-03] from hbs to bs
+[2025-09-03] [accept] 74279123 read B-8269-02
+[2025-09-03] 79639041 110
+[2025-09-03] [accept] 93980894 read A-6352-01
+[2025-09-03] [accept] 74279123 restored B-8269-02
+[2025-09-03] [accept] 93980894 restored A-6352-01
+0
+15
+[2025-09-10] move A-6352-01 from bro to bs
+[2025-09-10] move B-8269-02 from bro to bs
+[2025-09-10] move A-6352-02 from hbs to bs
+[2025-09-10] move A-6352-03 from hbs to bs
+[2025-09-10] move A-6352-04 from hbs to bs
+[2025-09-10] move A-6352-05 from hbs to bs
+[2025-09-10] move A-6352-01 from bs to hbs
+[2025-09-10] move A-6352-02 from bs to hbs
+[2025-09-10] move A-6352-03 from bs to hbs
+[2025-09-10] move A-6352-04 from bs to hbs
+[2025-09-10] move A-6352-05 from bs to hbs
+[2025-09-10] move C-6028-03 from bs to hbs
+[2025-09-10] move C-6028-04 from bs to hbs
+[2025-09-10] move B-8269-02 from bs to hbs
+[2025-09-10] move B-8269-03 from bs to hbs
+[2025-09-10] [accept] 93980894 returned C-6028-02 not overdue
+0
+10
+[2025-12-31] move C-6028-02 from bro to bs
+[2025-12-31] move A-6352-01 from hbs to bs
+[2025-12-31] move A-6352-02 from hbs to bs
+[2025-12-31] move A-6352-03 from hbs to bs
+[2025-12-31] move A-6352-04 from hbs to bs
+[2025-12-31] move A-6352-05 from hbs to bs
+[2025-12-31] move C-6028-03 from hbs to bs
+[2025-12-31] move C-6028-04 from hbs to bs
+[2025-12-31] move B-8269-02 from hbs to bs
+[2025-12-31] move B-8269-03 from hbs to bs
+[2025-12-31] A-6352-01 moving trace: 14
+1 [2025-01-29] from bs to rr
+2 [2025-01-29] from rr to bro
+3 [2025-02-02] from bro to bs
+4 [2025-02-02] from bs to hbs
+5 [2025-02-03] from hbs to bs
+6 [2025-08-25] from bs to rr
+7 [2025-08-25] from rr to bro
+8 [2025-09-03] from bro to bs
+9 [2025-09-03] from bs to hbs
+10 [2025-09-03] from hbs to rr
+11 [2025-09-03] from rr to bro
+12 [2025-09-10] from bro to bs
+13 [2025-09-10] from bs to hbs
+14 [2025-12-31] from hbs to bs
+[2025-12-31] B-8269-02 moving trace: 10
+1 [2025-07-10] from bs to rr
+2 [2025-07-10] from rr to bro
+3 [2025-08-25] from bro to bs
+4 [2025-08-25] from bs to hbs
+5 [2025-09-03] from hbs to bs
+6 [2025-09-03] from bs to rr
+7 [2025-09-03] from rr to bro
+8 [2025-09-10] from bro to bs
+9 [2025-09-10] from bs to hbs
+10 [2025-12-31] from hbs to bs
+[2025-12-31] B-8269-03 moving trace: 7
+1 [2025-07-10] from bs to rr
+2 [2025-07-10] from rr to bro
+3 [2025-08-25] from bro to bs
+4 [2025-08-25] from bs to hbs
+5 [2025-09-03] from hbs to bs
+6 [2025-09-10] from bs to hbs
+7 [2025-12-31] from hbs to bs
+[2025-12-31] A-6352-02 moving trace: 6
+1 [2025-02-02] from bs to hbs
+2 [2025-02-03] from hbs to bs
+3 [2025-09-03] from bs to hbs
+4 [2025-09-10] from hbs to bs
+5 [2025-09-10] from bs to hbs
+6 [2025-12-31] from hbs to bs
+[2025-12-31] A-6352-03 moving trace: 6
+1 [2025-02-02] from bs to hbs
+2 [2025-02-03] from hbs to bs
+3 [2025-09-03] from bs to hbs
+4 [2025-09-10] from hbs to bs
+5 [2025-09-10] from bs to hbs
+6 [2025-12-31] from hbs to bs
+[2025-12-31] 92637364 0
+[2025-12-31] 21825474 0
+[2025-12-31] 40421221 110
+[2025-12-31] 85638857 110
+[2025-12-31] 74279123 120
+[2025-12-31] 18017331 0
+[2025-12-31] 93980894 120
+[2025-12-31] 27980362 110
+[2025-12-31] 79639041 110
+0
+[INFO]Accepted! 1749198006.7395108
