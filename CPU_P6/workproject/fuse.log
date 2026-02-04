@@ -1,0 +1,79 @@
+Running: D:\ISE\software\14.7\ISE_DS\ISE\bin\nt64\unwrapped\fuse.exe -intstyle ise -incremental -lib unisims_ver -lib unimacro_ver -lib xilinxcorelib_ver -lib secureip -o D:/ISE/homework/CPU_P6_final/workproject/mips_txt_isim_beh.exe -prj D:/ISE/homework/CPU_P6_final/workproject/mips_txt_beh.prj work.mips_txt work.glbl 
+ISim P.20131013 (signature 0x7708f090)
+Number of CPUs detected in this system: 16
+Turning on mult-threading, number of parallel sub-compilation jobs: 32 
+Determining compilation order of HDL files
+Analyzing Verilog file "D:/ISE/homework/CPU_P6_final/workproject/../vtest/TimeTranslator.v" into library work
+Analyzing Verilog file "D:/ISE/homework/CPU_P6_final/workproject/../vtest/timeSwitcher.v" into library work
+Analyzing Verilog file "D:/ISE/homework/CPU_P6_final/workproject/../vtest/Splitter.v" into library work
+Analyzing Verilog file "D:/ISE/homework/CPU_P6_final/workproject/../vtest/ShiftLeft2.v" into library work
+Analyzing Verilog file "D:/ISE/homework/CPU_P6_final/workproject/../vtest/RegSel.v" into library work
+Analyzing Verilog file "D:/ISE/homework/CPU_P6_final/workproject/../vtest/RegisterW.v" into library work
+Analyzing Verilog file "D:/ISE/homework/CPU_P6_final/workproject/../vtest/RegisterM.v" into library work
+Analyzing Verilog file "D:/ISE/homework/CPU_P6_final/workproject/../vtest/RegisterE.v" into library work
+Analyzing Verilog file "D:/ISE/homework/CPU_P6_final/workproject/../vtest/RegisterD.v" into library work
+Analyzing Verilog file "D:/ISE/homework/CPU_P6_final/workproject/../vtest/RegDataSel.v" into library work
+Analyzing Verilog file "D:/ISE/homework/CPU_P6_final/workproject/../vtest/PCsel.v" into library work
+Analyzing Verilog file "D:/ISE/homework/CPU_P6_final/workproject/../vtest/PC.v" into library work
+Analyzing Verilog file "D:/ISE/homework/CPU_P6_final/workproject/../vtest/Mext.v" into library work
+Analyzing Verilog file "D:/ISE/homework/CPU_P6_final/workproject/../vtest/mALU.v" into library work
+Analyzing Verilog file "D:/ISE/homework/CPU_P6_final/workproject/../vtest/HazardControl.v" into library work
+Analyzing Verilog file "D:/ISE/homework/CPU_P6_final/workproject/../vtest/GRF.v" into library work
+Analyzing Verilog file "D:/ISE/homework/CPU_P6_final/workproject/../vtest/EXT26.v" into library work
+Analyzing Verilog file "D:/ISE/homework/CPU_P6_final/workproject/../vtest/EXT16.v" into library work
+Analyzing Verilog file "D:/ISE/homework/CPU_P6_final/workproject/../vtest/ETrueRD2.v" into library work
+Analyzing Verilog file "D:/ISE/homework/CPU_P6_final/workproject/../vtest/ETrueRD1.v" into library work
+Analyzing Verilog file "D:/ISE/homework/CPU_P6_final/workproject/../vtest/DTrueRD2.v" into library work
+Analyzing Verilog file "D:/ISE/homework/CPU_P6_final/workproject/../vtest/DTrueRD1.v" into library work
+Analyzing Verilog file "D:/ISE/homework/CPU_P6_final/workproject/../vtest/Controller.v" into library work
+Analyzing Verilog file "D:/ISE/homework/CPU_P6_final/workproject/../vtest/CMP.v" into library work
+Analyzing Verilog file "D:/ISE/homework/CPU_P6_final/workproject/../vtest/BE.v" into library work
+Analyzing Verilog file "D:/ISE/homework/CPU_P6_final/workproject/../vtest/ALUsourceSel.v" into library work
+Analyzing Verilog file "D:/ISE/homework/CPU_P6_final/workproject/../vtest/ALUResultSel.v" into library work
+Analyzing Verilog file "D:/ISE/homework/CPU_P6_final/workproject/../vtest/ALU.v" into library work
+Analyzing Verilog file "D:/ISE/homework/CPU_P6_final/workproject/../vtest/ADDER.v" into library work
+Analyzing Verilog file "D:/ISE/homework/CPU_P6_final/workproject/../vtest/ADD4.v" into library work
+Analyzing Verilog file "D:/ISE/homework/CPU_P6_final/workproject/../vtest/mips.v" into library work
+Analyzing Verilog file "D:/ISE/homework/CPU_P6_final/workproject/../vtest/mips_tb.v" into library work
+Analyzing Verilog file "D:/ISE/software/14.7/ISE_DS/ISE//verilog/src/glbl.v" into library work
+Starting static elaboration
+Completed static elaboration
+Compiling module PCsel
+Compiling module PC
+Compiling module CMP
+Compiling module TimeTranslator
+Compiling module ADD4
+Compiling module RegisterD
+Compiling module Splitter
+Compiling module EXT16
+Compiling module D_control
+Compiling module RegSel
+Compiling module GRF
+Compiling module ShiftLeft2
+Compiling module ADDER
+Compiling module EXT26
+Compiling module timeSwitcher
+Compiling module RegisterE
+Compiling module ALUSel
+Compiling module ALU
+Compiling module RegisterM
+Compiling module RegisterW
+Compiling module RegDataSel
+Compiling module BE
+Compiling module Mext
+Compiling module mALU
+Compiling module ALUResultSel
+Compiling module HazardControl
+Compiling module DTrueRD1
+Compiling module DTrueRD2
+Compiling module ETrueRD1
+Compiling module ETrueRD2
+Compiling module mips
+Compiling module mips_txt
+Compiling module glbl
+Time Resolution for simulation is 1ps.
+Waiting for 2 sub-compilation(s) to finish...
+Compiled 33 Verilog Units
+Built simulation executable D:/ISE/homework/CPU_P6_final/workproject/mips_txt_isim_beh.exe
+Fuse Memory Usage: 34520 KB
+Fuse CPU Usage: 108 ms
