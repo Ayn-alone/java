@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>{{ song.song_name }} - 播放页</title>
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap-3.4.1-dist/css/bootstrap.min.css' %}">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .header {
+            background: #2c3e50;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+        }
+
+        .container {
+            width: 1200px;
+            margin: 30px auto;
+            display: flex;
+            gap: 30px;
+        }
+
+        /* 播放器+歌曲信息区域 */
+        .player-section {
+            width: 40%;
+        }
+
+        .song-card {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .album-cover-play {
+            width: 200px;
+            height: 200px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin: 0 auto 20px;
+        }
+
+        .song-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .song-meta {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        /* 原生播放器样式优化 */
+        audio {
+            width: 100%;
+            margin: 20px 0;
+        }
+
+        /* 评论区区域 */
+        .comment-section {
+            width: 60%;
+        }
+
+        .section-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+            padding-left: 10px;
+            border-left: 4px solid #008cff;
+        }
+
+        .comment-form {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .comment-textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            resize: none;
+            margin-bottom: 10px;
+        }
+
+        .submit-comment {
+            background: #008cff;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .submit-comment:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .comment-list {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .comment-item {
+            padding: 15px 0;
+            border-bottom: 1px dashed #eee;
+        }
+
+        .comment-item:last-child {
+            border-bottom: none;
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .comment-username {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .comment-time {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .comment-content {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .no-comment {
+            text-align: center;
+            padding: 30px;
+            color: #999;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+<!-- 顶部导航栏 -->
+<div class="header">
+    <h1>音乐管理系统</h1>
+    <div>
+        {% if current_username %}
+            <span>欢迎，{{ current_username }}</span>
+            <a href="/personal/">个人中心</a>
+            <a href="/logout/">退出登录</a>
+        {% else %}
+            <a href="/login/">登录</a>
+            <a href="/sign_up/">注册</a>
+        {% endif %}
+        <a href="/home/">返回首页</a>
+
+        {#        <a href="/singer/{{ singer_id }}/">返回歌手主页</a>#}
+
+        <!-- 动态返回链接 -->
+        {% if from_page == 'singer' and singer_id %}
+            <a href="/singer/{{ singer_id }}/">返回歌手主页</a>
+        {% elif from_page == 'album' and album_id %}
+            <a href="/album/{{ album_id }}/">返回专辑主页</a>
+            {% elif from_page == 'playlist' and playlist_id %}
+            <a href="/playlist/{{ playlist_id }}/">返回歌单主页</a>
+        {% else %}
+            <a href="/home/">返回首页</a>
+        {% endif %}
+
+    </div>
+</div>
+
+<div class="container">
+    <!-- 播放器+歌曲信息区域 -->
+    <div class="player-section">
+        <div class="song-card">
+            <!-- 专辑封面 -->
+            <img src="{{ song.cover|default:'' }}" alt="{{ song.album_name }}" class="album-cover-play">
+            <!-- 歌曲标题 -->
+            <div class="song-title">{{ song.song_name }}</div>
+            <!-- 歌曲信息 -->
+            <div class="song-meta">歌手：{{ song.singer_name }}</div>
+            <div class="song-meta">专辑：{{ song.album_name|default:'单曲' }}</div>
+            <div class="song-meta">语种：{{ song.language }}</div>
+            <div class="song-meta">风格：{{ song.style }}</div>
+            <div class="song-meta">时长：{{ song.duration_str }}</div>
+            <!-- 原生音频播放器（支持mp3、wav等格式） -->
+            {#                <audio controls>#}
+            {#                    <source src="{{ song.audio_url }}" type="audio/mpeg">#}
+            {#                    您的浏览器不支持音频播放，请升级浏览器。#}
+            {#                </audio>#}
+        </div>
+    </div>
+
+    <!-- 评论区区域 -->
+    <div class="comment-section">
+        <h2 class="section-title">评论区（{{ comments|length }}条）</h2>
+
+        <!-- 发布评论表单（仅登录用户可见） -->
+        {% if current_user_id %}
+            <form class="comment-form" method="post">
+                {% csrf_token %}
+                <!-- 隐藏传递来源参数 -->
+                {% if from_page %}
+                    <input type="hidden" name="from_page" value="{{ from_page }}">
+                {% endif %}
+                {% if singer_id %}
+                    <input type="hidden" name="singer_id" value="{{ singer_id }}">
+                {% endif %}
+                {% if album_id %}
+                    <input type="hidden" name="album_id" value="{{ album_id }}">
+                {% endif %}
+
+                {% if playlist_id %}
+                    <input type="hidden" name="playlist_id" value="{{ playlist_id }}">
+                {% endif %}
+
+
+                <textarea class="comment-textarea" name="comment_content" placeholder="分享你的听后感..."></textarea>
+                <button type="submit" class="submit-comment">发布评论</button>
+            </form>
+        {% else %}
+            <div class="comment-form" style="text-align: center; padding: 20px;">
+                <a href="/login/?next=/play/{{ song.song_id }}/" style="color: #008cff;">登录后即可发布评论</a>
+            </div>
+        {% endif %}
+
+        <!-- 评论列表 -->
+        <div class="comment-list">
+            {% for comment in comments %}
+                <div class="comment-item">
+                    <div class="comment-header">
+                        <span class="comment-username">{{ comment.username }}</span>
+                        <span class="comment-time">{{ comment.create_time_str }}</span>
+                    </div>
+                    <div class="comment-content">{{ comment.content }}</div>
+                </div>
+            {% empty %}
+                <div class="no-comment">暂无评论，快来抢沙发～</div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- 引入jQuery -->
+<script src="{% static 'js/jquery-3.7.1.js' %}"></script>
+<script src="{% static 'plugins/bootstrap-3.4.1-dist/js/bootstrap.min.js' %}"></script>
+</body>
+</html>

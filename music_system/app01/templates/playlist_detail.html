@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>{{ playlist.playlist_name }} - 歌单详情</title>
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap-3.4.1-dist/css/bootstrap.min.css' %}">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .header {
+            background: #2c3e50;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+        }
+        .container {
+            width: 1200px;
+            margin: 30px auto;
+        }
+        .playlist-info {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        .playlist-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .playlist-meta {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        .song-list {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .song-list th, .song-list td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        .song-list th {
+            background: #f8f9fa;
+        }
+        .song-name a {
+            color: #008cff;
+            text-decoration: none;
+        }
+        .empty-tip {
+            text-align: center;
+            padding: 30px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+<!-- 顶部导航栏（和其他页面保持一致） -->
+<div class="header">
+    <h1>音乐管理系统</h1>
+    <div>
+        {% if current_username %}
+            <span>欢迎，{{ current_username }}</span>
+            <a href="/personal/">个人中心</a>
+            <a href="/logout/">退出登录</a>
+        {% else %}
+            <a href="/login/">登录</a>
+            <a href="/sign_up/">注册</a>
+        {% endif %}
+        <a href="/home/">返回首页</a>
+
+        <!-- 新增：返回个人中心歌单页（从URL获取playlist_id，判断来源） -->
+        {% if playlist.playlist_id %}
+            <a href="/personal/#playlist-tab">返回我的歌单</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="container">
+    <!-- 歌单信息卡片 -->
+    <div class="playlist-info">
+        <div class="playlist-title">{{ playlist.playlist_name }}</div>
+        <div class="playlist-meta">创建者：{{ playlist.creator_name }}</div>
+        <div class="playlist-meta">创建时间：{{ playlist.create_time|date:"Y-m-d H:i" }}</div>
+        <div class="playlist-meta">歌曲数量：{{ songs|length }}首</div>
+        <div class="playlist-meta" style="margin-top: 10px;">简介：{{ playlist.intro|default:"暂无简介" }}</div>
+    </div>
+
+    <!-- 歌曲列表 -->
+    <h3>歌曲列表</h3>
+    {% if songs %}
+        <table class="song-list">
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>歌曲名称</th>
+                <th>歌手</th>
+                <th>时长</th>
+                <th>添加时间</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for song in songs %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td class="song-name">
+                        <a href="/play/{{ song.song_id }}/?from=playlist&playlist_id={{ playlist.playlist_id }}">
+                            {{ song.song_name }}
+                        </a>
+                    </td>
+                    <td>{{ song.singer_name }}</td>
+                    <td>{{ song.duration_str }}</td>
+                    <td>{{ song.add_time|date:"Y-m-d" }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="empty-tip">该歌单暂无歌曲，快去添加吧～</div>
+    {% endif %}
+</div>
+</body>
+</html>

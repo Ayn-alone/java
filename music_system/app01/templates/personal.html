@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>个人中心 - 音乐管理系统</title>
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap-3.4.1-dist/css/bootstrap.min.css' %}">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .header {
+            background: #2c3e50;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+        }
+        .container {
+            width: 1200px;
+            margin: 30px auto;
+        }
+        /* 用户信息区域 */
+        .user-info-card {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .user-info h2 {
+            margin-bottom: 10px;
+        }
+        .user-meta {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        /* 标签页样式 */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 20px;
+        }
+        .tab-item {
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            color: #666;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-item.active {
+            color: #008cff;
+            border-bottom-color: #008cff;
+        }
+        /* 内容区域 */
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        /* 列表样式 */
+        .list-card {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .list-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            padding-left: 10px;
+            border-left: 3px solid #008cff;
+        }
+        .empty-tip {
+            text-align: center;
+            padding: 30px;
+            color: #999;
+            font-size: 14px;
+        }
+        /* 歌曲列表 */
+        .song-list {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .song-list th, .song-list td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        /* 专辑列表 */
+        .album-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        .album-card {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .album-cover {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .album-info {
+            padding: 10px;
+            text-align: center;
+        }
+        /* 歌手列表 */
+        .singer-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .singer-card {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+        .singer-photo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 10px;
+        }
+        /* 修改密码表单 */
+        .password-form {
+            max-width: 500px;
+            margin: 0 auto;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #333;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .submit-btn {
+            background: #008cff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<!-- 顶部导航栏 -->
+<div class="header">
+    <h1>音乐管理系统</h1>
+    <div>
+        <span>欢迎，{{ current_username }}</span>
+        <a href="/personal/">个人中心</a>
+        <a href="/logout/">退出登录</a>
+        <a href="/home/">返回首页</a>
+    </div>
+</div>
+
+<div class="container">
+    <!-- 用户信息卡片 -->
+    <div class="user-info-card">
+        <div class="user-info">
+            <h2>{{ user_info.username }}</h2>
+            <div class="user-meta">注册时间：{{ user_info.register_time|date:"Y-m-d H:i:s" }}</div>
+        </div>
+        <button class="tab-item" onclick="switchTab('password-tab')">修改密码</button>
+    </div>
+
+    <!-- 标签页导航 -->
+    <div class="tabs">
+        <div class="tab-item active" onclick="switchTab('collect-song-tab')">收藏歌曲</div>
+        <div class="tab-item" onclick="switchTab('collect-album-tab')">收藏专辑</div>
+        <div class="tab-item" onclick="switchTab('follow-singer-tab')">关注歌手</div>
+    </div>
+
+    <!-- 收藏歌曲内容 -->
+    <div class="tab-content active" id="collect-song-tab">
+        <div class="list-card">
+            <div class="list-title">我的收藏歌曲（{{ collect_songs|length }}首）</div>
+            {% if collect_songs %}
+                <table class="song-list">
+                    <thead>
+                    <tr>
+                        <th>歌曲名称</th>
+                        <th>歌手</th>
+                        <th>时长</th>
+                        <th>收藏时间</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for song in collect_songs %}
+                        <tr>
+                            <td><a href="/play/{{ song.song_id }}/" style="color: #008cff; text-decoration: none;">{{ song.song_name }}</a></td>
+                            <td>{{ song.singer_name }}</td>
+                            <td>{{ song.duration_str }}</td>
+                            <td>{{ song.collect_time|date:"Y-m-d H:i:s" }}</td>
+                            <td>
+                                <button class="cancel-collect" data-type="song" data-id="{{ song.song_id }}">取消收藏</button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="empty-tip">暂无收藏歌曲</div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- 收藏专辑内容 -->
+    <div class="tab-content" id="collect-album-tab">
+        <div class="list-card">
+            <div class="list-title">我的收藏专辑（{{ collect_albums|length }}张）</div>
+            {% if collect_albums %}
+                <div class="album-list">
+                    {% for album in collect_albums %}
+                        <div class="album-card">
+                            <img src="{{ album.cover }}" alt="{{ album.album_name }}" class="album-cover">
+                            <div class="album-info">
+                                <div><a href="/album/{{ album.album_id }}/" style="color: #008cff; text-decoration: none;">{{ album.album_name }}</a></div>
+                                <div style="font-size: 12px; color: #999; margin-top: 5px;">歌手：{{ album.singer_name }}</div>
+                                <div style="font-size: 12px; color: #999; margin-top: 5px;">收藏时间：{{ album.collect_time|date:"Y-m-d" }}</div>
+                                <button class="cancel-collect" style="margin-top: 10px;" data-type="album" data-id="{{ album.album_id }}">取消收藏</button>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-tip">暂无收藏专辑</div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- 关注歌手内容 -->
+    <div class="tab-content" id="follow-singer-tab">
+        <div class="list-card">
+            <div class="list-title">我的关注歌手（{{ follow_singers|length }}位）</div>
+            {% if follow_singers %}
+                <div class="singer-list">
+                    {% for singer in follow_singers %}
+                        <div class="singer-card">
+                            <img src="{{ singer.singer_photo }}" alt="{{ singer.singer_name }}" class="singer-photo">
+                            <div style="font-weight: bold; margin-bottom: 5px;"><a href="/singer/{{ singer.singer_id }}/" style="color: #333; text-decoration: none;">{{ singer.singer_name }}</a></div>
+                            <div style="font-size: 12px; color: #666;">地区：{{ singer.region }}</div>
+                            <div style="font-size: 12px; color: #999; margin-top: 5px;">关注时间：{{ singer.follow_time|date:"Y-m-d" }}</div>
+                            <button class="unfollow-singer" style="margin-top: 10px;" data-id="{{ singer.singer_id }}">取消关注</button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-tip">暂无关注歌手</div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- 新增歌单标签页 -->
+<div class="tab-item" onclick="switchTab('playlist-tab')">我的歌单</div>
+
+<!-- 歌单内容区域 -->
+<div class="tab-content" id="playlist-tab">
+    <div class="list-card">
+        <div class="list-title">我的歌单（{{ playlists|length }}个）</div>
+
+        <!-- 创建歌单表单 -->
+        <div style="margin-bottom: 20px; padding: 15px; border: 1px dashed #eee; border-radius: 8px;">
+            <input type="text" id="playlist_name" placeholder="输入歌单名称" style="padding: 8px; width: 300px;">
+            <textarea id="playlist_intro" placeholder="歌单简介（可选）" style="margin-top: 10px; padding: 8px; width: 300px; height: 60px;"></textarea>
+            <button id="create-playlist-btn" style="margin-top: 10px; padding: 8px 20px; background: #008cff; color: white; border: none; border-radius: 4px;">创建歌单</button>
+        </div>
+
+        <!-- 歌单列表 -->
+        {% if playlists %}
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px;">
+                {% for playlist in playlists %}
+                    <div style="border: 1px solid #eee; border-radius: 8px; padding: 15px;">
+                        <h4><a href="/playlist/{{ playlist.playlist_id }}/" style="color: #008cff;">{{ playlist.playlist_name }}</a></h4>
+                        <p style="font-size: 12px; color: #666; margin: 10px 0;">创建时间：{{ playlist.create_time|date:"Y-m-d" }}</p>
+                        <p style="font-size: 13px; color: #333;">{{ playlist.intro|default:"暂无简介" }}</p>
+                        <p style="font-size: 12px; color: #999; margin-top: 10px;">歌曲数量：{{ playlist.song_count }}首</p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-tip">暂无歌单，点击创建</div>
+        {% endif %}
+    </div>
+</div>
+
+
+
+    <!-- 修改密码内容 -->
+    <div class="tab-content" id="password-tab">
+        <div class="password-form">
+            <h3 style="text-align: center; margin-bottom: 20px;">修改密码</h3>
+            <div class="form-group">
+                <label for="old_password">旧密码</label>
+                <input type="password" style="display: none;">
+                <input type="password" id="old_password" name="old_password" placeholder="请输入旧密码"
+       autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+            </div>
+            <div class="form-group">
+                <label for="new_password">新密码</label>
+                <input type="password" id="new_password" name="new_password" placeholder="请输入新密码"
+       autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+            </div>
+            <div class="form-group">
+                <label for="confirm_password">确认新密码</label>
+                <input type="password" id="confirm_password" name="confirm_password" placeholder="请再次输入新密码"
+       autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+            </div>
+            <button type="button" class="submit-btn" id="change-pwd-btn">提交修改</button>
+        </div>
+    </div>
+</div>
+
+<!-- 引入jQuery -->
+<script src="{% static 'js/jquery-3.7.1.js' %}"></script>
+<script>
+    // 创建歌单
+    $('#create-playlist-btn').click(function () {
+        const playlistName = $('#playlist_name').val().trim();
+        const intro = $('#playlist_intro').val().trim();
+        if (!playlistName) {
+            alert('歌单名称不能为空');
+            return;
+        }
+        $.post('/create_playlist/', {
+            playlist_name: playlistName,
+            intro: intro,
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+        }, function (res) {
+            alert(res.msg);
+            if (res.code === 1) {
+                location.reload();  // 刷新页面
+            }
+        });
+    });
+
+    // 标签页切换
+    function switchTab(tabId) {
+        // 隐藏所有内容
+        $('.tab-content').removeClass('active');
+        // 显示目标内容
+        $('#' + tabId).addClass('active');
+        // 切换标签样式
+        $('.tab-item').removeClass('active');
+        $(`[onclick="switchTab('${tabId}')"]`).addClass('active');
+    }
+
+    // 取消收藏（歌曲/专辑）
+    $('.cancel-collect').click(function () {
+        const $btn = $(this);
+        const type = $btn.data('type');  // 'song' 或 'album'
+        const id = $btn.data('id');
+        const action = 'cancel';
+
+        if (confirm(`确定要取消收藏${type === 'song' ? '该歌曲' : '该专辑'}吗？`)) {
+            $.post(`/collect_${type}/`, {
+                [type + '_id']: id,
+                action: action,
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            }, function (res) {
+                if (res.code === 1) {
+                    alert(res.msg);
+                    location.reload();  // 刷新页面
+                } else {
+                    alert(res.msg);
+                }
+            });
+        }
+    });
+
+    // 取消关注歌手
+    $('.unfollow-singer').click(function () {
+        const $btn = $(this);
+        const singerId = $btn.data('id');
+        const action = 'unfollow';
+
+        if (confirm('确定要取消关注该歌手吗？')) {
+            $.post('/follow_singer/', {
+                singer_id: singerId,
+                action: action,
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            }, function (res) {
+                if (res.code === 1) {
+                    alert(res.msg);
+                    location.reload();  // 刷新页面
+                } else {
+                    alert(res.msg);
+                }
+            });
+        }
+    });
+
+    // 修改密码
+    $('#change-pwd-btn').click(function () {
+        const oldPassword = $('#old_password').val().trim();
+        const newPassword = $('#new_password').val().trim();
+        const confirmPassword = $('#confirm_password').val().trim();
+
+        if (!oldPassword || !newPassword || !confirmPassword) {
+            alert('请填写所有字段');
+            return;
+        }
+        if (newPassword !== confirmPassword) {
+            alert('两次密码不一致');
+            return;
+        }
+
+
+        $.post('/change_password/', {
+            old_password: oldPassword,
+            new_password: newPassword,
+            confirm_password: confirmPassword,
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+        }, function (res) {
+            if (res.code === 1) {
+                alert(res.msg);
+                window.location.href = '/logout/';  // 跳转到登录页
+            } else {
+                alert(res.msg);
+            }
+        });
+    });
+</script>
+</body>
+</html>

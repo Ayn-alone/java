@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>首页 - 音乐管理系统</title>
+    <link rel="stylesheet" href="../static/plugins/bootstrap-3.4.1-dist/css/bootstrap.min.css">
+    <style>
+        /* 简单样式优化，可自行调整 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .header {
+            background: #2c3e50;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+        }
+
+        .container {
+            width: 1200px;
+            margin: 30px auto;
+        }
+
+        .singer-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .singer-card {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            transition: box-shadow 0.3s;
+        }
+
+        .singer-card:hover {
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .singer-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 15px;
+        }
+
+        .singer-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .singer-info {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .follow-btn {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .follow-btn.followed {
+            background: #ccc;
+            color: #666;
+        }
+
+        .follow-btn.unfollowed {
+            background: #008cff;
+            color: white;
+        }
+
+        .follow-count {
+            font-size: 13px;
+            color: #999;
+            margin-top: 10px;
+        }
+
+        /* 卡片外层容器：相对定位，控制整体大小和阴影 */
+        .singer-card-wrapper {
+            position: relative; /* 为按钮绝对定位做父容器 */
+            border: 1px solid #eee;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: box-shadow 0.3s;
+        }
+
+        /* 鼠标悬浮卡片时，整体加阴影（保持原有hover效果） */
+        .singer-card-wrapper:hover {
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 跳转链接内部容器：填充卡片，确保点击区域完整 */
+        .singer-card-inner {
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* 关注按钮+关注量容器：绝对定位在卡片底部，不被链接覆盖 */
+        .singer-card-actions {
+            position: relative; /* 层级高于跳转链接 */
+            padding: 0 20px 20px; /* 底部内边距，和卡片上半部分对齐 */
+            text-align: center;
+            z-index: 10; /* 确保按钮在链接上方，优先接收点击 */
+        }
+
+        /* 保持原有按钮和关注量样式不变，只调整间距 */
+        .follow-btn {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-bottom: 10px; /* 按钮和关注量之间加间距 */
+        }
+
+        /* 其他原有样式（singer-photo、singer-name等）保持不变 */
+    </style>
+</head>
+<body>
+<!-- 顶部导航栏 -->
+<div class="header">
+    <h1>音乐管理系统</h1>
+    <div>
+        {% if current_username %}
+            <span>欢迎，{{ current_username }}</span>
+            <a href="/personal/">个人中心</a>
+            <a href="/logout/">退出登录</a>
+        {% else %}
+            <a href="/login/">登录</a>
+            <a href="/sign_up/">注册</a>
+        {% endif %}
+    </div>
+</div>
+
+<!-- 歌手列表容器 -->
+<div class="container">
+    <h2>歌手列表</h2>
+    <div class="singer-list">
+        {% for singer in singers %}
+            <!-- 卡片容器：外层用div包裹，内部包含跳转链接和按钮，保持整体样式 -->
+            <div class="singer-card-wrapper">
+                <!-- 跳转链接：覆盖卡片大部分区域，除了按钮 -->
+                <a href="/singer/{{ singer.singer_id }}/" class="singer-link"
+                   style="text-decoration: none; color: inherit;">
+                    <div class="singer-card-inner">
+                        <img src="{{ singer.singer_photo }}" alt="{{ singer.singer_name }}" class="singer-photo">
+                        <div class="singer-name">{{ singer.singer_name }}</div>
+                        <div class="singer-info">地区：{{ singer.region }}</div>
+                        <div class="singer-info">年龄：{{ singer.age }}</div>
+                        <div class="singer-info"
+                             style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                            简介：{{ singer.intro }}
+                        </div>
+                    </div>
+                </a>
+                <!-- 关注按钮+关注量：绝对定位在卡片底部，不被链接覆盖 -->
+                <div class="singer-card-actions">
+                    <button class="follow-btn {% if singer.is_followed %}followed{% else %}unfollowed{% endif %}"
+                            data-singer-id="{{ singer.singer_id }}">
+                        {% if singer.is_followed %}已关注{% else %}关注{% endif %}
+                    </button>
+                    <div class="follow-count">关注量：{{ singer.follow_count }}</div>
+                </div>
+            </div>
+        {% empty %}
+            <div style="grid-column: 1/-1; text-align: center; padding: 50px;">
+                暂无歌手数据
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+<!-- 引入jQuery，用于关注/取消关注异步操作 -->
+<script src="../static/js/jquery-3.7.1.js"></script>
+<script src="../static/plugins/bootstrap-3.4.1-dist/js/bootstrap.min.js"></script>
+
+<script>
+    // 关注/取消关注功能
+    $('.follow-btn').click(function () {
+        // 关键：阻止<a>标签的跳转行为和事件冒泡
+
+        const $btn = $(this);
+        const singerId = $btn.data('singer-id');  // 获取歌手ID
+        const isFollowed = $btn.hasClass('followed');  // 判断当前状态
+
+        // 确定操作类型：已关注→取消关注，未关注→关注
+        const action = isFollowed ? 'unfollow' : 'follow';
+
+        // 发送异步请求到后端接口
+        $.post('/follow_singer/', {
+            singer_id: singerId,
+            action: action,
+            csrfmiddlewaretoken: '{{ csrf_token }}'  // Django CSRF防护必须
+        }, function (res) {
+            if (res.code === 1) {
+                // 更新按钮样式和文本
+                if (action === 'follow') {
+                    $btn.removeClass('unfollowed').addClass('followed').text('已关注');
+                    // 关注量+1
+                    const $count = $btn.next('.follow-count');
+                    const currentCount = parseInt($count.text().split('：')[1]);
+                    $count.text(`关注量：${currentCount + 1}`);
+                } else {
+                    $btn.removeClass('followed').addClass('unfollowed').text('关注');
+                    // 关注量-1
+                    const $count = $btn.next('.follow-count');
+                    const currentCount = parseInt($count.text().split('：')[1]);
+                    $count.text(`关注量：${currentCount - 1}`);
+                }
+                alert(res.msg);
+            } else {
+                alert(res.msg);
+                // 未登录则跳转到登录页
+                if (res.msg === '请先登录') {
+                    window.location.href = '/login/';
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>

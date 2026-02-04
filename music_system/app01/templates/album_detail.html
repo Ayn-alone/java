@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>{{ album.album_name }} - 专辑详情</title>
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap-3.4.1-dist/css/bootstrap.min.css' %}">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .header {
+            background: #2c3e50;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+        }
+
+        .container {
+            width: 1200px;
+            margin: 30px auto;
+        }
+
+        /* 专辑信息区域 */
+        .album-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .album-cover {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-right: 30px;
+        }
+
+        .album-info h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .album-meta {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        .singer-link {
+            color: #008cff;
+            text-decoration: none;
+        }
+
+        /* 歌曲列表区域 */
+        .section-title {
+            font-size: 22px;
+            margin-bottom: 20px;
+            padding-left: 10px;
+            border-left: 4px solid #008cff;
+        }
+
+        .song-list {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .song-list th, .song-list td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .song-list th {
+            background: #f8f9fa;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .song-name {
+            font-weight: 500;
+        }
+
+        .collect-btn {
+            padding: 6px 15px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .collect-btn.collected {
+            background: #ff3a3a;
+            color: white;
+        }
+
+        .collect-btn.uncollected {
+            background: #008cff;
+            color: white;
+        }
+
+        .collect-count {
+            font-size: 12px;
+            color: #999;
+            margin-left: 5px;
+        }
+
+        .album-collect-btn {
+            padding: 8px 25px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 15px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<!-- 顶部导航栏 -->
+<div class="header">
+    <h1>音乐管理系统</h1>
+    <div>
+        {% if current_username %}
+            <span>欢迎，{{ current_username }}</span>
+            <a href="/personal/">个人中心</a>
+            <a href="/logout/">退出登录</a>
+        {% else %}
+            <a href="/login/">登录</a>
+            <a href="/sign_up/">注册</a>
+        {% endif %}
+        <a href="/home/">返回首页</a>
+        <a href="/singer/{{ album.singer_id }}/">返回歌手主页</a>
+    </div>
+</div>
+
+<div class="container">
+    <!-- 专辑信息区域 -->
+    <div class="album-header">
+        <img src="{{ album.cover }}" alt="{{ album.album_name }}" class="album-cover">
+        <div class="album-info">
+            <h1>{{ album.album_name }}</h1>
+            <div class="album-meta">
+                歌手：<a href="/singer/{{ album.singer_id }}/" class="singer-link">{{ album.singer_name }}</a><br>
+                发行时间：{{ album.release_time }}<br>
+                歌曲数量：{{ songs|length }}首
+            </div>
+            <!-- 专辑收藏按钮 -->
+            <button class="album-collect-btn {% if album.is_collected %}collected{% else %}uncollected{% endif %}"
+                    data-type="album" data-id="{{ album.album_id }}">
+                {% if album.is_collected %}已收藏专辑{% else %}收藏专辑{% endif %}
+            </button>
+        </div>
+    </div>
+
+    <!-- 歌曲列表区域 -->
+    <div class="section">
+        <h2 class="section-title">专辑曲目</h2>
+        <table class="song-list">
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>歌曲名称</th>
+                <th>语种</th>
+                <th>风格</th>
+                <th>时长</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for song in songs %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>  <!-- 自动生成序号 -->
+                    <td>
+                        <a href="/play/{{ song.song_id }}/?from=album&album_id={{ album.album_id }}"
+                           style="text-decoration: none; color: inherit;">
+                            <span class="song-name">{{ song.song_name }}</span>
+                        </a>
+                        <span class="collect-count">（收藏：{{ song.collect_count }}次）</span>
+                    </td>
+                    <td>{{ song.language }}</td>
+                    <td>{{ song.style }}</td>
+                    <td>{{ song.duration_str }}</td>
+                    <td>
+                        <!-- 歌曲收藏按钮 -->
+                        <button class="collect-btn {% if song.is_collected %}collected{% else %}uncollected{% endif %}"
+                                data-type="song" data-id="{{ song.song_id }}">
+                            {% if song.is_collected %}已收藏{% else %}收藏歌曲{% endif %}
+                        </button>
+
+                        <!-- 在歌曲收藏按钮旁新增按钮 -->
+                        <button class="add-to-playlist-btn" data-song-id="{{ song.song_id }}"
+                                style="margin-left: 10px; padding: 6px 15px; background: #f5f5f5; border: none; border-radius: 20px; cursor: pointer;">
+                            添加到歌单
+                        </button>
+
+                        <!-- 歌单选择弹窗（默认隐藏） -->
+                        <div id="playlist-modal"
+                             style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 100;">
+                            <div style="width: 400px; background: white; margin: 100px auto; padding: 20px; border-radius: 8px;">
+                                <h3 style="margin-top: 0;">选择歌单</h3>
+                                <div id="playlist-options" style="max-height: 200px; overflow-y: auto; margin: 15px 0;">
+                                    <!-- 动态加载用户歌单 -->
+                                </div>
+                                <button id="close-modal"
+                                        style="padding: 8px 20px; background: #ccc; border: none; border-radius: 4px; cursor: pointer;">
+                                    关闭
+                                </button>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: 30px; color: #999;">
+                        该专辑暂无歌曲
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- 引入jQuery处理收藏逻辑 -->
+<script src="{% static 'js/jquery-3.7.1.js' %}"></script>
+<script src="{% static 'plugins/bootstrap-3.4.1-dist/js/bootstrap.min.js' %}"></script>
+<script>
+    // 打开歌单选择弹窗
+    $('.add-to-playlist-btn').click(function () {
+        const songId = $(this).data('song-id');
+        $('#playlist-modal').data('song-id', songId).show();
+
+        // 加载用户歌单
+        $.get('/personal/get_playlists/', function (res) {
+            let html = '';
+            if (res.playlists.length === 0) {
+                html = '<p>暂无歌单，请先创建</p>';
+            } else {
+                res.playlists.forEach(playlist => {
+                    html += `<div style="padding: 10px; border-bottom: 1px solid #eee;">
+                        <label>
+                            <input type="radio" name="playlist" value="${playlist.playlist_id}"> ${playlist.playlist_name}
+                        </label>
+                    </div>`;
+                });
+                html += `<button id="confirm-add" style="margin-top: 10px; padding: 8px 20px; background: #008cff; color: white; border: none; border-radius: 4px;">确认添加</button>`;
+            }
+            $('#playlist-options').html(html);
+        });
+    });
+
+    // 关闭弹窗
+    $('#close-modal').click(function () {
+        $('#playlist-modal').hide();
+    });
+
+    // 确认添加到歌单
+    $(document).on('click', '#confirm-add', function () {
+        const songId = $('#playlist-modal').data('song-id');
+        const playlistId = $('input[name="playlist"]:checked').val();
+        if (!playlistId) {
+            alert('请选择歌单');
+            return;
+        }
+        $.post('/add_song_to_playlist/', {
+            song_id: songId,
+            playlist_id: playlistId,
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+        }, function (res) {
+            alert(res.msg);
+            if (res.code === 1) {
+                $('#playlist-modal').hide();
+            }
+        });
+    });
+
+
+    // 专辑/歌曲收藏逻辑（复用之前的收藏接口）
+    $('.collect-btn, .album-collect-btn').click(function () {
+        const $btn = $(this);
+        const type = $btn.data('type');  // 'album' 或 'song'
+        const id = $btn.data('id');
+        const isCollected = $btn.hasClass('collected');
+        const action = isCollected ? 'cancel' : 'collect';
+
+        $.post(`/collect_${type}/`, {
+            [type + '_id']: id,
+            action: action,
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+        }, function (res) {
+            if (res.code === 1) {
+                if (action === 'collect') {
+                    $btn.removeClass('uncollected').addClass('collected');
+                    $btn.text(type === 'album' ? '已收藏专辑' : '已收藏');
+                    // 更新歌曲收藏量
+                    if (type === 'song') {
+                        const $count = $btn.closest('tr').find('.collect-count');
+                        const currentCount = parseInt($count.text().match(/\d+/)[0]);
+                        $count.text(`（收藏：${currentCount + 1}次）`);
+                    }
+                } else {
+                    $btn.removeClass('collected').addClass('uncollected');
+                    $btn.text(type === 'album' ? '收藏专辑' : '收藏歌曲');
+                    // 更新歌曲收藏量
+                    if (type === 'song') {
+                        const $count = $btn.closest('tr').find('.collect-count');
+                        const currentCount = parseInt($count.text().match(/\d+/)[0]);
+                        $count.text(`（收藏：${currentCount - 1}次）`);
+                    }
+                }
+                alert(res.msg);
+            } else {
+                alert(res.msg);
+                if (res.msg === '请先登录') {
+                    window.location.href = '/login/';
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>
